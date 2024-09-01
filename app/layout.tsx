@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import NavBar from "../app/components/navBar";
-import Footer from "../app/components/footer";
+import Footer from "./components/footer/footer";
 import "./globals.css";
-
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Task Mate",
@@ -19,9 +15,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <NavBar />
-        <main className="container mx-auto p-4">
+        <main className="flex min-h-full flex-col items-left justify-between mt-24 ml-4 mr-4">
           {children}
         </main>
         <Footer />
