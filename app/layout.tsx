@@ -4,7 +4,7 @@ import Footer from "./components/footer/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Task Mate",
+  title: "Task Mate 📋",
   description: "Your personal task management companion!",
 };
 
