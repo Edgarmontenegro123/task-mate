@@ -55,9 +55,11 @@ const ToDoList = () => {
         setEditingTaskId(null)
     }
     const toggleTaskCompletion = (id: number) => {
-        setTasks(tasks.map(task =>
+        const updatedTasks = tasks.map(task =>
             task.id === id ? { ...task, completed: !task.completed } : task
-        ))
+        )
+        setTasks(updatedTasks)
+        saveTaskToLocalStorage(updatedTasks)
     }
 
     const deleteTask = (id: number) => {
