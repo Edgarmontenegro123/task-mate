@@ -3,8 +3,7 @@
 import React, {useEffect, useState} from "react";
 import Swal from 'sweetalert2';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
-
+import {colors} from "@/public/constants/constants"
 
 interface Task {
     id: number;
@@ -13,14 +12,6 @@ interface Task {
     color: string;
 }
 
-const colors = [
-    "#FF5733", // Rojo
-    "#33FF57", // Verde
-    "#3357FF", // Azul
-    "#F4FF33", // Amarillo
-    "#FF33F6", // Rosa
-    "#FF9A33"  // Naranja
-];
 
 const ToDoList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -106,7 +97,6 @@ const ToDoList = () => {
     }
 
     const handleOnDragEnd = (result: any) => {
-        console.log('Drag result:', result);
         if(!result.destination) return
         if(result.destination.droppableId !== "droppable-tasks") {
             console.error("Destino no válido: ", result.destination.droppableId)
@@ -138,7 +128,7 @@ const ToDoList = () => {
     }
 
     return(
-        <div className="p-4">
+        <div className="p-4 mt-4 mb-16">
             <input
                 type="text"
                 value={taskText}
@@ -149,24 +139,24 @@ const ToDoList = () => {
                         addTask()
                     }
                 }}
-                className="w-1/2 p-2 border border-gray-300 rounded text-slate-900"
+                className="w-1/2 p-2 border border-gray-300 rounded text-slate-900 mb-4"
             />
             <div className="mt-2">
                 {colors.map(color => (
                     <button key={color}
                             onClick={() => setSelectedColor(color)}
-                            style={{backgroundColor: color, width: 24, height: 24, margin: 2, borderRadius: "50%"}}
+                            style={{backgroundColor: color, width: 24, height: 24, margin: 6, borderRadius: "10%"}}
                             className={`border ${selectedColor === color? 'border-black' : 'border-transparent'}`}
                     />
                 ))}
             </div>
-            <button onClick={addTask} className="ml-2 p-2 bg-blue-500 text-white rounded">
+            <button onClick={addTask} className="ml-2 my-4 p-2 bg-blue-500 text-white rounded">
                 Add Task
             </button>
             <DragDropContext onDragEnd={handleOnDragEnd}>
                 <Droppable droppableId="droppable-tasks">
                     {(provided) => (
-                        <ul {...provided.droppableProps} ref={provided.innerRef} className="mt-4">
+                        <ul {...provided.droppableProps} ref={provided.innerRef} className="mt-4 mb-16">
                             {tasks.map((task, index) => (
                                 <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
                                     {(provided) => (
