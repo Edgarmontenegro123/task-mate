@@ -40,3 +40,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.task-text {
+  white-space: pre-wrap; /* Permite respetar los saltos de línea */
+  word-wrap: break-word; /* Ajusta las palabras largas para evitar el desbordamiento */
+  overflow-wrap: break-word; /* Alternativa para compatibilidad */
+  max-width: 90%; /* Limita el ancho del contenedor */
+}

@@ -178,7 +178,7 @@ const ToDoList = () => {
                                                 />
                                             ) : (
                                                 <span onClick={() => toggleTaskCompletion(task.id)}
-                                                      className={`text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}
+                                                      className={`task-text text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}
                                                       style={{color: task.color}}
                                                 >
                                                     {task.text}
