@@ -1,6 +1,10 @@
 "use client"
 
 import React, {useEffect, useState} from "react";
+import Swal from 'sweetalert2';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
+
 
 interface Task {
     id: number;
@@ -63,7 +67,44 @@ const ToDoList = () => {
     }
 
     const deleteTask = (id: number) => {
-        setTasks(tasks.filter(task => task.id !== id))
+        Swal.fire({
+            title: "¿Estás seguro de querer eliminar esta nota?",
+            text: "¡Esta acción no podrá revertirse!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            width: "80%"
+        }).then((result) => {
+            if(result.isConfirmed) {
+                const updatedTasks = tasks.filter(task => task.id !== id)
+                localStorage.setItem("tasks", JSON.stringify(updatedTasks))
+                setTasks(updatedTasks)
+
+                Swal.fire(
+                    "Eliminado",
+                    "La nota ha sido eliminada!",
+                    "success"
+                )
+            }
+        })
+    }
+
+    const handleOnDragEnd = (result: any) => {
+        console.log('Drag result:', result);
+        if(!result.destination) return
+        if(result.destination.droppableId !== "droppable-tasks") {
+            console.error("Destino no válido: ", result.destination.droppableId)
+            return
+        }
+
+        const newTasks = Array.from(tasks)
+        const [reorderedTask] = newTasks.splice(result.source.index, 1)
+        newTasks.splice(result.destination.index, 0, reorderedTask)
+        setTasks(newTasks)
+        saveTaskToLocalStorage(newTasks)
     }
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,44 +141,60 @@ const ToDoList = () => {
             <button onClick={addTask} className="ml-2 p-2 bg-blue-500 text-white rounded">
                 Add Task
             </button>
-            <ul className="mt-4">
-                {tasks.map(task => (
-                    <li key={task.id} className="flex flex-col items-start p-2 border-b border-slate-400">
-                        <span className="text-xs text-slate-400 mb-1">{new Date(task.id).toLocaleDateString()}</span>
-                        {editingTaskId === task.id ? (
-                            <input
-                                type="text"
-                                value={editingTaskText}
-                                onChange={handleInput}
-                                onBlur={handleBlur}
-                                onKeyDown={ (e) => handleKeyDown(e, task.id)}
-                                className="text-slate-900 w-1/2 p-1 border-b border-gray-400 focus:outline-none"
-                            />
-                        ) : (
-                            <span onClick={() => toggleTaskCompletion(task.id)}
-                                  className={`text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}>
-                                {task.text}
-                            </span>
-                            )}
-                        <div className="flex ml-auto">
-                            <button
-                                onClick={() => startEditingTask(task.id, task.text)}
-                                className="text-slate-400 ml-auto mr-4">
-                                <i className="fas fa-edit fa-fade text-2xl"
-                                   style={{ '--fa-animation-duration': '2s' } as React.CSSProperties}></i>
-                            </button>
-                            <button
-                                onClick={() => deleteTask(task.id)}
-                                className="text-slate-400 ml-auto mr-4">
-                                <i className="fas fa-trash fa-fade text-2xl"
-                                   style={{ '--fa-animation-duration': '2s' } as React.CSSProperties}></i>
-                            </button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+                <Droppable droppableId="droppable-tasks">
+                    {(provided) => (
+                        <ul {...provided.droppableProps} ref={provided.innerRef} className="mt-4">
+                            {tasks.map((task, index) => (
+                                <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
+                                    {(provided) => (
+                                        <li ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            key={task.id}
+                                            className="flex flex-col items-start p-2 border-b border-slate-400">
+                                            <span className="text-xs text-slate-400 mb-1">{new Date(task.id).toLocaleDateString()}</span>
+                                            {editingTaskId === task.id ? (
+                                                <input
+                                                    type="text"
+                                                    value={editingTaskText}
+                                                    onChange={handleInput}
+                                                    onBlur={handleBlur}
+                                                    onKeyDown={ (e) => handleKeyDown(e, task.id)}
+                                                    className="text-slate-900 w-1/2 p-1 border-b border-gray-400 focus:outline-none"
+                                                />
+                                            ) : (
+                                                <span onClick={() => toggleTaskCompletion(task.id)}
+                                                      className={`text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}>
+                                                    {task.text}
+                                                </span>
+                                            )}
+                                            <div className="flex ml-auto">
+                                                <button
+                                                    onClick={() => startEditingTask(task.id, task.text)}
+                                                    className="text-slate-400 ml-auto mr-4">
+                                                    <i className="fas fa-edit fa-fade text-2xl"
+                                                       style={{ '--fa-animation-duration': '2s' } as React.CSSProperties}></i>
+                                                </button>
+                                                <button
+                                                    onClick={() => deleteTask(task.id)}
+                                                    className="text-slate-400 ml-auto mr-4">
+                                                    <i className="fas fa-trash fa-fade text-2xl"
+                                                       style={{ '--fa-animation-duration': '2s' } as React.CSSProperties}></i>
+                                                </button>
+                                            </div>
+                                        </li>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </ul>
+                    )}
+                </Droppable>
+            </DragDropContext>
         </div>
     )
 }
 
 export default ToDoList
+
