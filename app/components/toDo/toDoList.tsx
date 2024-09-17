@@ -10,13 +10,24 @@ interface Task {
     id: number;
     text: string;
     completed: boolean;
+    color: string;
 }
+
+const colors = [
+    "#FF5733", // Rojo
+    "#33FF57", // Verde
+    "#3357FF", // Azul
+    "#F4FF33", // Amarillo
+    "#FF33F6", // Rosa
+    "#FF9A33"  // Naranja
+];
 
 const ToDoList = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [taskText, setTaskText] = useState('')
     const [editingTaskId, setEditingTaskId] = useState<number | null>(null)
     const [editingTaskText, setEditingTaskText] = useState("")
+    const [selectedColor, setSelectedColor] = useState<string>(colors[0])
 
     useEffect(() => {
         const storedTasks = localStorage.getItem("tasks")
@@ -35,11 +46,13 @@ const ToDoList = () => {
             id: Date.now(),
             text: taskText,
             completed: false,
+            color: selectedColor,
         }
         const updatedTasks = [...tasks, newTask]
         setTasks(updatedTasks)
         saveTaskToLocalStorage(updatedTasks)
         setTaskText('')
+        setSelectedColor(colors[0])
     }
 
     const startEditingTask = (id: number, text: string) => {
@@ -138,6 +151,15 @@ const ToDoList = () => {
                 }}
                 className="w-1/2 p-2 border border-gray-300 rounded text-slate-900"
             />
+            <div className="mt-2">
+                {colors.map(color => (
+                    <button key={color}
+                            onClick={() => setSelectedColor(color)}
+                            style={{backgroundColor: color, width: 24, height: 24, margin: 2, borderRadius: "50%"}}
+                            className={`border ${selectedColor === color? 'border-black' : 'border-transparent'}`}
+                    />
+                ))}
+            </div>
             <button onClick={addTask} className="ml-2 p-2 bg-blue-500 text-white rounded">
                 Add Task
             </button>
@@ -152,6 +174,7 @@ const ToDoList = () => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                             key={task.id}
+                                            style={{ ...provided.draggableProps.style, color: task.color}}
                                             className="flex flex-col items-start p-2 border-b border-slate-400">
                                             <span className="text-xs text-slate-400 mb-1">{new Date(task.id).toLocaleDateString()}</span>
                                             {editingTaskId === task.id ? (
@@ -165,7 +188,9 @@ const ToDoList = () => {
                                                 />
                                             ) : (
                                                 <span onClick={() => toggleTaskCompletion(task.id)}
-                                                      className={`text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}>
+                                                      className={`text-slate-300 cursor-pointer ${task.completed ? 'line-through decoration-red-400' : ''}`}
+                                                      style={{color: task.color}}
+                                                >
                                                     {task.text}
                                                 </span>
                                             )}
