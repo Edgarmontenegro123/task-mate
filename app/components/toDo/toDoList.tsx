@@ -139,7 +139,8 @@ const ToDoList = () => {
                         addTask()
                     }
                 }}
-                className="w-1/2 p-2 border border-gray-300 rounded text-slate-900 mb-4"
+                //className="w-1/2 p-2 border border-gray-300 rounded text-slate-900 mb-4"
+                className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 p-2 border border-gray-300 rounded text-slate-900 mb-4"
             />
             <div className="mt-2">
                 {colors.map(color => (
