@@ -39,7 +39,7 @@ const ToDoList = () => {
             completed: false,
             color: selectedColor,
         }
-        const updatedTasks = [...tasks, newTask]
+        const updatedTasks = [newTask, ...tasks]
         setTasks(updatedTasks)
         saveTaskToLocalStorage(updatedTasks)
         setTaskText('')
