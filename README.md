@@ -2,6 +2,12 @@
 
 Task-Mate es una aplicación de gestión de tareas personal diseñada bajo un enfoque de **productividad minimalista**. Este proyecto fue desarrollado como entrega final académica para la tecnicatura, con el objetivo de ofrecer una interfaz intuitiva, rápida y visualmente agradable para organizar el día a día.
 
+## 📸 Vista Previa
+
+| Interfaz Principal |            Eliminar nota             |
+| :---: |:------------------------------------:|
+| ![Interfaz Principal](docs/TaskMate_00.png) | ![Modo Oscuro](docs/TaskMate_01.png) |
+
 ## ✨ Características Principales
 - **Gestión Integral:** Crea, edita, tacha y elimina tus tareas con fluidez.
 - **Drag & Drop:** Organiza tus prioridades fácilmente arrastrando y soltando tus tareas.
